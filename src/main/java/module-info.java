@@ -5,6 +5,6 @@ module event_planner {
     requires transitive java.net.http;
     requires transitive com.google.gson;
 
-    opens event_planner to javafx.fxml;
+    opens event_planner to com.google.gson;
     exports event_planner;
 }
