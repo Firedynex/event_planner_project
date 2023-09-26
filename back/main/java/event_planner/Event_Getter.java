@@ -1,20 +1,9 @@
 package event_planner;
 
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.net.URI;
-import java.net.URLEncoder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.nio.charset.StandardCharsets;
-
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 public class Event_Getter {
      private static Gson GSON = new GsonBuilder()
