@@ -16,14 +16,8 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-
-
-/**
- * This class is meant to help get the weather forecast for an area.
- */
-public class Weather {
-    
-    private static Gson GSON = new GsonBuilder()
+public class Event_Getter {
+     private static Gson GSON = new GsonBuilder()
     .setPrettyPrinting()
     .create();
     
@@ -32,7 +26,5 @@ public class Weather {
     .followRedirects(HttpClient.Redirect.NORMAL)
     .build();
     
-    public Weather() {
-        
-    }
+    
 }
