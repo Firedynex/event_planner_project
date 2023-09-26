@@ -17,22 +17,21 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 
-
 /**
  * This class is meant to help get the weather forecast for an area.
  */
 public class Weather {
-    
-    private static Gson GSON = new GsonBuilder()
-    .setPrettyPrinting()
-    .create();
-    
-    private static HttpClient HTTP_CLIENT = HttpClient.newBuilder()
-    .version(HttpClient.Version.HTTP_2)
-    .followRedirects(HttpClient.Redirect.NORMAL)
-    .build();
-    
-    public Weather() {
-        
-    }
+
+  private static Gson GSON = new GsonBuilder()
+      .setPrettyPrinting()
+      .create();
+
+  private static HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+      .version(HttpClient.Version.HTTP_2)
+      .followRedirects(HttpClient.Redirect.NORMAL)
+      .build();
+
+  public Weather() {
+
+  }
 }
