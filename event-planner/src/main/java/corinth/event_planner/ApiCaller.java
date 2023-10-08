@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandler;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class ApiCaller {
     
     private String ninjaKey;
+    private String newsKey;
 
     /** HTTP client. */
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
@@ -33,7 +35,8 @@ public class ApiCaller {
 
         /** Constructor that initializes the instance variables. */
     public ApiCaller() {
-        getKey();
+        getKey("D:\\Coding Projects\\Private_Keys.properties", "API_NINJAS_KEY", ninjaKey);
+        getKey("D:\\Coding Projects\\Private_Keys.properties", "GUARDIAN_KEY", newsKey);
     }
 
     /**
@@ -80,17 +83,42 @@ public class ApiCaller {
             throw new IllegalArgumentException("The given city is not valid!");
         }
     }
+   
     /**
-     * Method that gets the API Key.
+     * Returns a news object that contains 10 stories for the given {@code location}.
+     * @param location The location of the event.
+     * @return News {@code News} object that contains and array of 10 relevant stories.
      */
-    private void getKey() {
+    public News getNews(String location) {
+        String url = "https://content.guardianapis.com/search?q=";
+        String apiKey = "&api-key=" + newsKey;
+        try {
+            String query = URLEncoder.encode(location, StandardCharsets.UTF_8);
+            HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(url + query + apiKey))
+            .build();
+            HttpResponse<String> response = HTTP_CLIENT.send(request, BodyHandlers.ofString());
+            String responseBody = response.body();
+            News newsObject = GSON.<News>fromJson(responseBody, News.class);
+            return newsObject;
+        } catch (Throwable e) {
+            throw new IllegalStateException("Couldn't get news from the given query!");
+        }
+    }
+    /**
+     * Method that gets API keys.
+     * @param fileLocation Location of the file on the drive.
+     * @param keyName Name of the key for a specific API.
+     */
+    private void getKey(String fileLocation, String keyName, String apiKey) {
         try {
             Properties props = new Properties();
-            BufferedInputStream apiKeyFile = new BufferedInputStream(new FileInputStream("D:\\Coding Projects\\Private_Keys.properties"));
+            BufferedInputStream apiKeyFile = new BufferedInputStream(new FileInputStream(fileLocation));
             props.load(apiKeyFile);
-            ninjaKey = props.getProperty("API_NINJAS_KEY");
+            apiKey = props.getProperty(keyName);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }
