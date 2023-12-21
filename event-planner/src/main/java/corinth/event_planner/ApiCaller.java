@@ -13,6 +13,9 @@ import java.net.URLEncoder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+
+import org.apache.http.HttpException;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -73,7 +76,7 @@ public class ApiCaller {
             String cityName = URLEncoder.encode(city, StandardCharsets.UTF_8);
             HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create(url + cityName))
-            .header("X-API-Key", ninjaKey)
+            .header("X-API-Key", this.ninjaKey)
             .build();
             HttpResponse<String> response = HTTP_CLIENT.send(request, BodyHandlers.ofString());
             String responseBody = response.body();
@@ -84,6 +87,30 @@ public class ApiCaller {
         }
     }
    
+    /**
+     * Method that returns a weather object with detailed description about the current
+     * weather status of a given city.
+     * @param city Name of the desired city
+     * @param country Name of the desired country where city resides
+     * @return Weather Object that contains information about the current weather conditions.
+     * @throws HttpException Throws in case API fails.
+     */
+    public Weather getWeather(String city, String country) throws HttpException {
+        String url = "https://api.api-ninjas.com/v1/weather?city=";
+        try {
+            String cityName = URLEncoder.encode(city, StandardCharsets.UTF_8);
+            HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(url + cityName))
+            .header("X-API-Key", this.ninjaKey)
+            .build();
+            HttpResponse<String> response = HTTP_CLIENT.send(request, BodyHandlers.ofString());
+            String responseBody = response.body();
+            Weather weather = GSON.<Weather>fromJson(responseBody, Weather.class);
+            return weather;
+        } catch (Throwable e) {
+            throw new HttpException("Failed to retrieve information");
+        }
+    }
     /**
      * Returns a news object that contains 10 stories for the given {@code location}.
      * @param location The location of the event.
@@ -120,5 +147,4 @@ public class ApiCaller {
             e.printStackTrace();
         }
     }
-
 }
