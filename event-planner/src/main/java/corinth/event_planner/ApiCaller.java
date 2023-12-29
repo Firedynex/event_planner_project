@@ -133,7 +133,7 @@ public class ApiCaller {
         }
     }
 
-    public void weeklyWeather(double latitude, double longitude) {
+    public Forecast.weather[] weeklyWeather(double latitude, double longitude) {
         String url = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude +
         "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,uv_index_clear_sky_max,precipitation_probability_max,wind_speed_10m_max&temperature_unit=fahrenheit&timezone=America%2FNew_York";
         try {
@@ -142,7 +142,11 @@ public class ApiCaller {
             .build();
             HttpResponse<String> response = HTTP_CLIENT.send(request, BodyHandlers.ofString());
             String responseBody = response.body();
-            
+            Forecast.daily dailyForecast = GSON.<Forecast.daily>fromJson(responseBody, Forecast.daily.class);
+            Forecast forecast = new Forecast();
+            return forecast.populate(dailyForecast);
+        } catch (Throwable e) {
+            throw new IllegalStateException("Couldn't get the weather forecast!");
         }
     }
     /**

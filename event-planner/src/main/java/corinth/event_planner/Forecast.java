@@ -92,7 +92,7 @@ public class Forecast {
     /**
      * Nested class that represents one day of the 7 day forecast.
      */
-    private class weather {
+    public class weather {
         String time;
         double temperature_2m_max;
         double temperature_2m_min;
@@ -251,7 +251,41 @@ public class Forecast {
 
     private weather[] forecast;
 
+    /**
+     * Constructor to create a new forecast object.
+     */
     public Forecast() {
         this.forecast = new weather[7];
+    }
+
+    /**
+     * Accessor method to get the forecast array.
+     * @return weather[] Array that contains the forecast for the next 7 days.
+     */
+    public weather[] getForecast() {
+        return this.forecast;
+    }
+
+    /**
+     * Populates the {@code forecast} variable with weather objects representing the daily forecast for 
+     * the next 7 days.
+     * @param dailyForecast Daily object returned from a JSON object to get data from.
+     * @return weather[] {@code forecast} array with populated weather objects.
+     */
+    public weather[] populate(daily dailyForecast) {
+        for (int i = 0; i < 7; i++) {
+            weather dailyWeather = new weather();
+            dailyWeather.setTime(dailyForecast.getTime()[i]);
+            dailyWeather.setTemperature_2m_max(dailyForecast.getTemperature_2m_max()[i]);
+            dailyWeather.setTemperature_2m_min(dailyForecast.getTemperature_2m_min()[i]);
+            dailyWeather.setSunrise(dailyForecast.getSunrise()[i]);
+            dailyWeather.setSunset(dailyForecast.getSunset()[i]);
+            dailyWeather.setUv_index_max(dailyForecast.getUv_index_max()[i]);
+            dailyWeather.setUv_index_clear_sky_max(dailyForecast.getUv_index_clear_sky_max()[i]);
+            dailyWeather.setPrecipitation_probability_max(dailyForecast.getPrecipitation_probability_max()[i]);
+            dailyWeather.setWind_speed_10m_max(dailyForecast.getWind_speed_10m_max()[i]);
+            this.forecast[i] = dailyWeather;
+        }
+        return this.forecast;
     }
 }
